@@ -55,17 +55,25 @@ class Client
     new Search @
 
   # Github api URL builder
-  query: (path = '/', page = null, per_page = null) ->
+  query: (path = '/', page = null, per_page = null, params = {}) ->
     path = '/' + path if path[0] isnt '/'
     uri = "https://"
     uri+= if typeof @token == 'object' and @token.username then "#{@token.username}:#{@token.password}@" else ''
     uri+= "api.github.com#{path}?"
+
+    query_params = {}
+    for key, value of params
+      query_params[ key ] = value
+
     if typeof @token == 'string'
-      uri+= "access_token=#{@token}&"
+      query_params[ 'access_token' ] = @token
     else if typeof @token == 'object' and @token.id
-      uri+= "client_id=#{@token.id}&client_secret=#{@token.secret}&"
-    uri+= "page=#{page}&" if page?
-    uri+= "per_page=#{per_page}&" if per_page?
+      query_params[ 'client_id' ] = @token.id
+      query_params[ 'client_secret' ] = @token.secret
+    query_params[ 'page' ] = page if page?
+    query_params[ 'per_page' ] = per_page if per_page?
+
+    uri += querystring.stringify query_params
     uri
 
   errorHandle: (res, body, callback) ->
