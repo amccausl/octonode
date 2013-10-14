@@ -6,6 +6,7 @@
 
 # Requiring modules
 request = require 'request'
+querystring = require 'querystring'
 
 Me   = require './me'
 User = require './user'
