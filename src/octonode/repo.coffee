@@ -186,6 +186,12 @@ class Repo
       return cb(err) if err
       if s isnt 200 then cb(new Error("Repo stargazers error")) else cb null, b, headers
 
+  # Get the milestones for a repository
+  # '/repos/:owner/:repo/milestones' GET
+  milestones: (cb) ->
+    @client.get "/repos/#{@name}/milestones", (err, s, b) ->
+      return cb(err) if err
+      if s isnt 200 then cb(new Error("Repo milestones error")) else cb null, b
 
 # Export module
 module.exports = Repo
